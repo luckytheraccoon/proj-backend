@@ -11,8 +11,10 @@
 |
 */
 Route::get('/', function () {
-	return view('welcome');
+    return view('welcome');
 });
+
+Auth::routes();
 
 Route::get('/loginAjax', function () {
 	return view('loginAjax');
@@ -21,21 +23,23 @@ Route::get('/logoutAjax', function () {
 	return view('logoutAjax');
 });
 
-
-
-
-Route::get('/tasks', function () {
-	$tasks = App\Task::all();
-	return $tasks;
-    //return view('tasks.index', compact('tasks'));
-});
-
-Route::get('/tasks/{task}', function ($id) {
-	$task = DB::table('tasks')->find($id);
-	return view('tasks.show', compact('task'));
-});
-
-Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/test', function () {
+	$user = Auth::user();
+	if($user === null) {
+		echo json_encode(array("loggedIn"=>false));
+	} else {
+		echo json_encode(array("loggedIn"=>true));
+	}
+});
+
+Route::get('/checkAuth', function () {
+	$user = Auth::user();
+	if($user === null) {
+		$msg = ["loggedIn" => false, "loggedInAs" => null];
+	} else {
+		$msg = ["loggedIn" => true, "loggedInAs" => $user->name];
+	}
+    return response()->json($msg, 200);
+});
