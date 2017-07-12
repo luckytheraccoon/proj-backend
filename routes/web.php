@@ -14,6 +14,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/app/{any}', function ($any) {
+    return view('welcome');
+})->where('any', '.*');
+
 Auth::routes();
 
 Route::get('/loginAjax', function () {
